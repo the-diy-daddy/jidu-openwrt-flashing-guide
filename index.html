@@ -20,11 +20,16 @@ main{max-width:1120px;margin:-28px auto 0;padding:0 16px 48px}
 h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:36px 4px 14px;font-weight:700}
 h2 b{color:var(--a);margin-right:6px}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;box-shadow:0 6px 20px rgba(15,31,51,.06)}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;box-shadow:0 6px 20px rgba(15,31,51,.06);display:flex;flex-direction:column;align-items:flex-start;}
 .step .num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--a);color:#fff;font-weight:800;margin-bottom:10px}
 .step h3{margin:0 0 4px;font-size:17px}
-.step p{margin:0;color:var(--mut);font-size:14px}
+.step p{margin:0;color:var(--mut);font-size:14px;flex-grow:1;}
 .step .ic{position:absolute;right:16px;top:14px;font-size:28px}
+
+/* New CSS for Video Links in Steps */
+.vid-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:700;color:var(--a);background:rgba(59,130,246,0.1);padding:6px 12px;border-radius:8px;text-decoration:none;transition:background 0.2s}
+.vid-btn:hover{background:rgba(59,130,246,0.2)}
+
 .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 20px rgba(15,31,51,.06)}
 table{width:100%;border-collapse:collapse;min-width:560px}
 th,td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--line)}
@@ -47,6 +52,13 @@ td small{display:block;color:var(--mut)}
 .n.fin{background:var(--k);border-color:var(--k);color:#fff}
 .n.fin small{color:rgba(255,255,255,.85)}
 .n.warn{border-color:var(--bad);color:var(--bad)}
+
+/* New CSS for Video Links inside flowcharts */
+.n .vid-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:currentColor;opacity:0.8;margin-top:6px;text-decoration:none;transition:opacity 0.2s}
+.n .vid-link:hover{opacity:1;text-decoration:underline}
+.n.fin .vid-link{color:rgba(255,255,255,0.9)}
+.n.fin .vid-link:hover{color:#fff}
+
 .ar{font-size:12px;font-weight:700;color:var(--ok);display:inline-flex;align-items:center;gap:4px}
 .ar::after{content:"→";font-size:18px}
 .ar.bad{color:var(--bad)}
@@ -65,42 +77,120 @@ td small{display:block;color:var(--mut)}
 <main>
 <h2><b>01</b>Understanding the OpenWrt flash process</h2>
 <section class="steps">
-<div class="step"><span class="ic">🔍</span><div class="num">1</div><h3>Router model</h3><p>Identify your router's family: 6101, 6j01 or 6j11.</p></div>
-<div class="step"><span class="ic">💾</span><div class="num">2</div><h3>Stock firmware</h3><p>Check the version it runs. 6101 supports all; 6j01 and 6j11 need R3.2 or below.</p></div>
-<div class="step"><span class="ic">🔓</span><div class="num">3</div><h3>Getting SSH access in stock firmware</h3><p>Try the password trick first, if fails then the breeze.sh method.</p></div>
-<div class="step"><span class="ic">📶</span><div class="num">4</div><h3>Flashing OpenWrt into the router</h3><p>Flash via SSH, or via UART where the process calls for it.</p></div>
+<div class="step">
+  <span class="ic">🔍</span><div class="num">1</div>
+  <h3>Router model</h3>
+  <p>Identify your router's family: 6101, 6j01 or 6j11.</p>
+</div>
+<div class="step">
+  <span class="ic">💾</span><div class="num">2</div>
+  <h3>Stock firmware</h3>
+  <p>Check the version it runs. 6101 supports all; 6j01 and 6j11 need R3.2 or below.</p>
+</div>
+<div class="step">
+  <span class="ic">🔓</span><div class="num">3</div>
+  <h3>Getting SSH access</h3>
+  <p>Try the password trick first, if fails then the breeze.sh method.</p>
+</div>
+<div class="step">
+  <span class="ic">📶</span><div class="num">4</div>
+  <h3>Flashing OpenWrt</h3>
+  <p>Flash via SSH, or via UART where the process calls for it.</p>
+</div>
 </section>
 
 <h2><b>02</b>Supported stock firmware &amp; models</h2>
 <div class="wrap"><table>
 <tr><th class="r"></th><th class="fam c1">6101</th><th class="fam c2">6j01</th><th class="fam c3">6j11</th></tr>
 <tr><th class="r">Supported stock firmware</th>
-<td><span class="fw">ALL</span><small>even R3.2.3 works</small></td>
-<td><span class="fw">R3.2 or below</span><small>R3.2.3 not supported yet</small></td>
-<td><span class="fw">R3.2 or below</span><small>R3.2.3 not supported yet</small></td></tr>
+<td><span class="fw">ALL</span><small>R3.2.3 supported</small></td>
+<td><span class="fw">R3.2 or below</span><small>very few routers support R3.2.3 as of yet</small></td>
+<td><span class="fw">R3.2 or below</span><small>very few routers support R3.2.3 as of yet</small></td></tr>
 <tr><th class="r">Models included</th>
 <td><div class="chips"><span class="chip t1">6101</span></div></td>
 <td><div class="chips"><span class="chip t2">6201</span><span class="chip t2">6401</span><span class="chip t2">6601</span><span class="chip t2">6701</span></div></td>
 <td><div class="chips"><span class="chip t3">6111</span><span class="chip t3">6411</span><span class="chip t3">6611</span><span class="chip t3">6811</span><span class="chip t3">6911</span></div></td></tr>
+<tr><th class="r">Firmware Files</th>
+<td>
+  <small><a href="https://drive.google.com/drive/folders/1GYuves_MEW19P7FcMGNtVU861aizoRoD" target="_blank">Download 6101 Firmware</a></small>
+</td>
+<td>
+  <small><a href="https://drive.google.com/drive/folders/1f9NcFRToAQkdlO0qa30Nzu_zgTxr4hN5" target="_blank">Download 6j01 Firmware</a></small>
+</td>
+<td>
+  <small><a href="https://www.mediafire.com/folder/1zos6ljykle9r/JIDU6J11_03Aug2026_0740PM" target="_blank">Download 6j11 Firmware</a></small>
+</td>
+<tr><th class="r">Commands Link</th>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/6101_commands.md" target="_blank">6101 UART</a></small>
+</td>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/README.md" target="_blank">6101/6j01 SSH</a></small>
+</td>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/6j11_instructions.md" target="_blank">6j11 UART</a></small>
+</td>
 </table></div>
 
 <h2><b>03</b>Process by router</h2>
 <section class="wf">
 <article class="card" style="--k:var(--a)">
 <h3><em>A</em> · 6101 process</h3>
-<div class="flow"><div class="n">🔑 Attempt password trick</div><span class="ar">success</span><div class="n fin">Flash using SSH<small>Video</small></div></div>
-<div class="flow fb"><span class="lab">If the password trick fails</span><div class="n warn">Attempt breeze.sh method</div><span class="ar">success</span><div class="n fin">Flash using SSH<small>Video</small></div></div>
-<div class="flow fb"><span class="lab">If both fail</span><div class="n fin">Flash directly using UART method<small>Video</small></div></div>
+<div class="flow">
+  <div class="n">🔑 Attempt password trick<br><a href="https://youtu.be/vRjaGgDsWSo?list=RDvRjaGgDsWSo&t=76" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If the password trick fails</span>
+  <div class="n warn">Attempt breeze.sh method<br><a href="https://youtu.be/S8LuuL7tme4?t=108" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If both fail</span>
+  <div class="n fin">Flash directly using UART method<br><a href="https://youtu.be/Vz5grwLGxug" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
 </article>
+
 <article class="card" style="--k:var(--b)">
 <h3><em>B</em> · 6j01 process</h3>
-<div class="flow"><div class="n">🔑 Attempt password trick</div><span class="ar">success</span><div class="n fin">Flash using SSH<small>Video</small></div></div>
-<div class="flow fb"><span class="lab">If the password trick fails</span><div class="n warn">Attempt breeze.sh method</div><span class="ar">success</span><div class="n fin">Flash using SSH<small>Video</small></div></div>
+<div class="flow">
+  <div class="n">🔑 Attempt password trick<br><a href="https://youtu.be/vRjaGgDsWSo?list=RDvRjaGgDsWSo&t=76" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If the password trick fails</span>
+  <div class="n warn">Attempt breeze.sh method<br><a href="https://youtu.be/S8LuuL7tme4?t=108" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If Backup Restore Option Available</span>
+  <div class="n warn">Attempt Downgrade Firmware<br><a href="https://youtu.be/ODFnTourHYk?t=48" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If by any chance SSH method fails</span>
+  <div class="n warn">Attempt UART method of 6101, works on every 6j01<br><a href="https://youtu.be/Vz5grwLGxug" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
 </article>
+
 <article class="card" style="--k:var(--c)">
 <h3><em>C</em> · 6j11 process</h3>
-<div class="flow"><div class="n">🔑 Attempt password trick</div><span class="ar">success</span><div class="n fin">Flash using UART<small>Video</small></div></div>
-<div class="flow fb"><span class="lab">If the password trick fails</span><div class="n warn">Attempt breeze.sh method</div><span class="ar">success</span><div class="n fin">Flash using UART<small>Video</small></div></div>
+<div class="flow">
+  <div class="n">🔑 Attempt password trick<br><a href="https://youtu.be/vRjaGgDsWSo?list=RDvRjaGgDsWSo&t=76" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using UART<br><a href="https://youtu.be/ODFnTourHYk?t=839" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If the password trick fails</span>
+  <div class="n warn">Attempt breeze.sh method<br><a href="https://youtu.be/S8LuuL7tme4?t=108" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using UART<br><a href="https://youtu.be/ODFnTourHYk?t=839" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
 </article>
 </section>
 
