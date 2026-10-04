@@ -5,10 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Advanced OpenWrt Flashing Guide &amp; Compatibility Master-Chart</title>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--ink:#0f1f33;--mut:#5b6b80;--line:#e1e8f0;--ok:#16a34a;--bad:#dc2626;--a:#3b82f6;--b:#8b5cf6;--c:#f59e0b;--hero1:#0f2a4a;--hero2:#0e7490;
+:root{--bg:#f4f7fb;--card:#fff;--ink:#0f1f33;--mut:#5b6b80;
+/* FIX: Darkened --line significantly so card and table borders are highly visible */
+--line:#94a3b8;
+--ok:#16a34a;--bad:#dc2626;--a:#3b82f6;--b:#8b5cf6;--c:#f59e0b;--hero1:#0f2a4a;--hero2:#0e7490;
+/* HIGH-CONTRAST BOX VARIABLES */
+--nbg:#ffffff;--nline:#94a3b8;--wbg:#fef2f2;--wline:#ef4444;--wtxt:#991b1b;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--card:#141d2e;--ink:#e8eef7;--mut:#94a3b8;--line:#243146;--ok:#4ade80;--bad:#f87171;--a:#60a5fa;--b:#a78bfa;--c:#fbbf24;--hero1:#0b1a30;--hero2:#0e4f63}}
-:root[data-theme="dark"]{--bg:#0b1220;--card:#141d2e;--ink:#e8eef7;--mut:#94a3b8;--line:#243146;--ok:#4ade80;--bad:#f87171;--a:#60a5fa;--b:#a78bfa;--c:#fbbf24;--hero1:#0b1a30;--hero2:#0e4f63}
+
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0b1220;--card:#141d2e;--ink:#e8eef7;--mut:#94a3b8;--line:#243146;--ok:#4ade80;--bad:#f87171;--a:#60a5fa;--b:#a78bfa;--c:#fbbf24;--hero1:#0b1a30;--hero2:#0e4f63;
+--nbg:#0b1220;--nline:#334155;--wbg:rgba(239,68,68,0.1);--wline:#ef4444;--wtxt:#fca5a5;
+}}
+
+:root[data-theme="dark"]{
+--bg:#0b1220;--card:#141d2e;--ink:#e8eef7;--mut:#94a3b8;--line:#243146;--ok:#4ade80;--bad:#f87171;--a:#60a5fa;--b:#a78bfa;--c:#fbbf24;--hero1:#0b1a30;--hero2:#0e4f63;
+--nbg:#0b1220;--nline:#334155;--wbg:rgba(239,68,68,0.1);--wline:#ef4444;--wtxt:#fca5a5;
+}
+
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -47,17 +61,20 @@ td small{display:block;color:var(--mut)}
 .card h3{margin:0 0 14px;font-size:19px}
 .card h3 em{font-style:normal;color:var(--k)}
 .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
-.n{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px;font-weight:600;font-size:14px;line-height:1.3}
+
+/* UPDATED BOX STYLES */
+.n{border:1px solid var(--nline);background:var(--nbg);border-radius:12px;padding:10px 14px;font-weight:600;font-size:14px;line-height:1.3;box-shadow:0 2px 6px rgba(0,0,0,0.03);}
 .n small{display:block;font-weight:500;color:var(--mut);font-size:12px;margin-top:2px}
 .n.fin{background:var(--k);border-color:var(--k);color:#fff}
 .n.fin small{color:rgba(255,255,255,.85)}
-.n.warn{border-color:var(--bad);color:var(--bad)}
+.n.warn{border-color:var(--wline);background:var(--wbg);color:var(--wtxt)}
 
 /* CSS for Video Links inside flowcharts */
 .n .vid-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:currentColor;opacity:0.8;margin-top:6px;text-decoration:none;transition:opacity 0.2s}
 .n .vid-link:hover{opacity:1;text-decoration:underline}
 .n.fin .vid-link{color:rgba(255,255,255,0.9)}
 .n.fin .vid-link:hover{color:#fff}
+.n.warn .vid-link{color:var(--wtxt)}
 
 .ar{font-size:12px;font-weight:700;color:var(--ok);display:inline-flex;align-items:center;gap:4px}
 .ar::after{content:"→";font-size:18px}
