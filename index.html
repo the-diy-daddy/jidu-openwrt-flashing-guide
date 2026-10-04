@@ -26,7 +26,7 @@ h2 b{color:var(--a);margin-right:6px}
 .step p{margin:0;color:var(--mut);font-size:14px;flex-grow:1;}
 .step .ic{position:absolute;right:16px;top:14px;font-size:28px}
 
-/* New CSS for Video Links in Steps */
+/* CSS for Video Links in Steps */
 .vid-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:700;color:var(--a);background:rgba(59,130,246,0.1);padding:6px 12px;border-radius:8px;text-decoration:none;transition:background 0.2s}
 .vid-btn:hover{background:rgba(59,130,246,0.2)}
 
@@ -53,7 +53,7 @@ td small{display:block;color:var(--mut)}
 .n.fin small{color:rgba(255,255,255,.85)}
 .n.warn{border-color:var(--bad);color:var(--bad)}
 
-/* New CSS for Video Links inside flowcharts */
+/* CSS for Video Links inside flowcharts */
 .n .vid-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:currentColor;opacity:0.8;margin-top:6px;text-decoration:none;transition:opacity 0.2s}
 .n .vid-link:hover{opacity:1;text-decoration:underline}
 .n.fin .vid-link{color:rgba(255,255,255,0.9)}
@@ -67,14 +67,99 @@ td small{display:block;color:var(--mut)}
 .legend{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:28px;color:var(--mut);font-size:13px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .dot{width:22px;height:4px;border-radius:2px;background:var(--ok)}.dot.bad{background:var(--bad)}.sq{width:14px;height:14px;border-radius:4px;background:var(--a)}
+
+/* Disclaimer below title */
+.hero-disclaimer {
+  max-width: 820px;
+  margin: 24px auto 0;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 4px solid #f87171;
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  text-align: left;
+}
+.hero-disclaimer strong {
+  color: #fca5a5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+/* --- Social & Community Links --- */
+.social-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s, filter 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.social-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.yt-btn { background: #dc2626; } /* YouTube Red */
+.dc-btn { background: #5865F2; } /* Discord Blurple */
+
+/* --- Responsive Embedded Video Wrapper --- */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* Forces 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(15,31,51,0.06);
+  border: 1px solid var(--line);
+  background: #000;
+  margin-bottom: 16px;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
 </style>
 </head>
 <body>
 <header class="hero">
 <small>Router firmware reference</small>
 <h1>Advanced <span>OpenWrt</span> Flashing Guide &amp; Compatibility Master-Chart</h1>
+
+<!-- Disclaimer added right here below the title -->
+<div class="hero-disclaimer">
+  <strong>⚠️ Important Disclaimer</strong> 
+  This guide and its linked videos are strictly for educational and research purposes. We do not support, promote, or encourage any illegal activities or Terms of Service violations. Modifying your Jio Jidu6j01 or Jidu6j11 routers with third-party firmware like OpenWrt carries inherent risks, including voiding your warranty or permanently bricking your device. Proceed entirely at your own risk. The devices shown in these videos were obtained from the second-hand/scrap market and are not associated with any active official Jio subscription. We strongly discourage anyone from retaining or modifying equipment that is still under an active service agreement.
+</div>
+
+<!-- Social Links added below the disclaimer -->
+<div class="social-links">
+  <a href="https://www.youtube.com/@the_diy_daddy" target="_blank" class="social-btn yt-btn">▶ Subscribe on YouTube</a>
+  <a href="https://discord.gg/kJUtrdfnG" target="_blank" class="social-btn dc-btn">💬 Join our Discord</a>
+</div>
+
 </header>
 <main>
+
 <h2><b>01</b>Understanding the OpenWrt flash process</h2>
 <section class="steps">
 <div class="step">
@@ -193,6 +278,14 @@ td small{display:block;color:var(--mut)}
 </div>
 </article>
 </section>
+
+<!-- Embedded Video Section moved to the bottom -->
+<h2><b>04</b>Featured Video Guide</h2>
+<div class="video-wrapper">
+  <!-- Replace the src URL with your actual YouTube video embed URL -->
+  <!-- Note: Make sure it says "/embed/" not "/watch?v=" -->
+  <iframe src="https://www.youtube.com/embed/S8LuuL7tme4" title="OpenWrt Flashing Guide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 <div class="legend">
 <span><i class="dot"></i>Success path</span><span><i class="dot bad"></i>Failure path</span><span>→ Key step</span><span><i class="sq"></i>Final action</span>
