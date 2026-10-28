@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Advanced OpenWrt Flashing Guide &amp; Compatibility Master-Chart</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#0f1f33;--mut:#5b6b80;
+/* FIX: Darkened --line significantly so card and table borders are highly visible */
+--line:#94a3b8;
+--ok:#16a34a;--bad:#dc2626;--a:#3b82f6;--b:#8b5cf6;--c:#0d9488;--hero1:#0f2a4a;--hero2:#0e7490;
+/* HIGH-CONTRAST BOX VARIABLES */
+--nbg:#ffffff;--nline:#94a3b8;--wbg:#fef2f2;--wline:#ef4444;--wtxt:#991b1b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0b1220;--card:#141d2e;--ink:#e8eef7;--mut:#94a3b8;--line:#243146;--ok:#4ade80;--bad:#f87171;--a:#60a5fa;--b:#a78bfa;--c:#0f766e;--hero1:#0b1a30;--hero2:#0e4f63;
+--nbg:#0b1220;--nline:#334155;--wbg:rgba(239,68,68,0.1);--wline:#ef4444;--wtxt:#fca5a5;
+}}
+
+:root[data-theme="dark"]{
+--bg:#0b1220;--card:#141d2e;--ink:#e8eef7;--mut:#94a3b8;--line:#243146;--ok:#4ade80;--bad:#f87171;--a:#60a5fa;--b:#a78bfa;--c:#0f766e;--hero1:#0b1a30;--hero2:#0e4f63;
+--nbg:#0b1220;--nline:#334155;--wbg:rgba(239,68,68,0.1);--wline:#ef4444;--wtxt:#fca5a5;
+}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding:48px 20px 56px;text-align:center}
+.hero small{letter-spacing:.2em;text-transform:uppercase;opacity:.75;font-size:12px;font-weight:600}
+.hero h1{margin:10px auto 0;max-width:820px;font-size:clamp(26px,5vw,44px);line-height:1.15;font-weight:800}
+.hero h1 span{color:#60a5fa}
+main{max-width:1120px;margin:-28px auto 0;padding:0 16px 48px}
+h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:36px 4px 14px;font-weight:700}
+h2 b{color:var(--a);margin-right:6px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;box-shadow:0 6px 20px rgba(15,31,51,.06);display:flex;flex-direction:column;align-items:flex-start;}
+.step .num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--a);color:#fff;font-weight:800;margin-bottom:10px}
+.step h3{margin:0 0 4px;font-size:17px}
+.step p{margin:0;color:var(--mut);font-size:14px;flex-grow:1;}
+.step .ic{position:absolute;right:16px;top:14px;font-size:28px}
+
+/* CSS for Video Links in Steps */
+.vid-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:700;color:var(--a);background:rgba(59,130,246,0.1);padding:6px 12px;border-radius:8px;text-decoration:none;transition:background 0.2s}
+.vid-btn:hover{background:rgba(59,130,246,0.2)}
+
+.wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 20px rgba(15,31,51,.06)}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th,td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th.fam{font-size:22px;font-weight:800;color:#fff}
+th.r{text-align:left;color:var(--mut);font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.c1{background:var(--a)}.c2{background:var(--b)}.c3{background:var(--c)}
+td small{display:block;color:var(--mut)}
+.fw{font-weight:700;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{font:600 14px ui-monospace,Menlo,Consolas,monospace;padding:4px 10px;border-radius:999px;border:1px solid currentColor}
+.t1{color:var(--a)}.t2{color:var(--b)}.t3{color:var(--c)}
+.wf{display:grid;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;border-top:5px solid var(--k);box-shadow:0 6px 20px rgba(15,31,51,.06)}
+.card h3{margin:0 0 14px;font-size:19px}
+.card h3 em{font-style:normal;color:var(--k)}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+
+/* UPDATED BOX STYLES */
+.n{border:1px solid var(--nline);background:var(--nbg);border-radius:12px;padding:10px 14px;font-weight:600;font-size:14px;line-height:1.3;box-shadow:0 2px 6px rgba(0,0,0,0.03);}
+.n small{display:block;font-weight:500;color:var(--mut);font-size:12px;margin-top:2px}
+.n.fin{background:var(--k);border-color:var(--k);color:#fff}
+.n.fin small{color:rgba(255,255,255,.85)}
+.n.warn{border-color:var(--wline);background:var(--wbg);color:var(--wtxt)}
+
+/* CSS for Video Links inside flowcharts */
+.n .vid-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:currentColor;opacity:0.8;margin-top:6px;text-decoration:none;transition:opacity 0.2s}
+.n .vid-link:hover{opacity:1;text-decoration:underline}
+.n.fin .vid-link{color:rgba(255,255,255,0.9)}
+.n.fin .vid-link:hover{color:#fff}
+.n.warn .vid-link{color:var(--wtxt)}
+
+.ar{font-size:12px;font-weight:700;color:var(--ok);display:inline-flex;align-items:center;gap:4px}
+.ar::after{content:"→";font-size:18px}
+.ar.bad{color:var(--bad)}
+.lab{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bad);width:100%}
+.fb{padding-top:10px;border-top:1px dashed var(--line);margin-top:12px}
+.legend{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:28px;color:var(--mut);font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:22px;height:4px;border-radius:2px;background:var(--ok)}.dot.bad{background:var(--bad)}.sq{width:14px;height:14px;border-radius:4px;background:var(--a)}
+
+/* Disclaimer below title */
+.hero-disclaimer {
+  max-width: 820px;
+  margin: 24px auto 0;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 4px solid #f87171;
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  text-align: left;
+}
+.hero-disclaimer strong {
+  color: #fca5a5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+/* --- Social & Community Links --- */
+.social-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s, filter 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.social-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.yt-btn { background: #dc2626; } /* YouTube Red */
+.dc-btn { background: #5865F2; } /* Discord Blurple */
+
+/* --- Responsive Embedded Video Wrapper --- */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* Forces 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(15,31,51,0.06);
+  border: 1px solid var(--line);
+  background: #000;
+  margin-bottom: 16px;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<small>Router firmware reference</small>
+<h1>Advanced <span>OpenWrt</span> Flashing Guide &amp; Compatibility Master-Chart</h1>
+
+<!-- Disclaimer added right here below the title -->
+<div class="hero-disclaimer">
+  <strong>⚠️ Important Disclaimer</strong> 
+  This guide and its linked videos are strictly for educational and research purposes. We do not support, promote, or encourage any illegal activities or Terms of Service violations. Modifying your Jio Jidu6j01 or Jidu6j11 routers with third-party firmware like OpenWrt carries inherent risks, including voiding your warranty or permanently bricking your device. Proceed entirely at your own risk. The devices shown in these videos were obtained from the second-hand/scrap market and are not associated with any active official Jio subscription. We strongly discourage anyone from retaining or modifying equipment that is still under an active service agreement.
+</div>
+
+<!-- Social Links added below the disclaimer -->
+<div class="social-links">
+  <a href="https://www.youtube.com/@the_diy_daddy" target="_blank" class="social-btn yt-btn">▶ Subscribe on YouTube</a>
+  <a href="https://discord.gg/aSprgqWUA7" target="_blank" class="social-btn dc-btn">💬 Join our Discord</a>
+</div>
+
+</header>
+<main>
+
+<h2><b>01</b>Understanding the OpenWrt flash process</h2>
+<section class="steps">
+<div class="step">
+  <span class="ic">🔍</span><div class="num">1</div>
+  <h3>Router model</h3>
+  <p>Identify your router's family: 6101, 6j01 or 6j11.</p>
+</div>
+<div class="step">
+  <span class="ic">💾</span><div class="num">2</div>
+  <h3>Stock firmware</h3>
+  <p>Check the version it runs. 6101 supports all; 6j01 and 6j11 need R3.2 or below.</p>
+</div>
+<div class="step">
+  <span class="ic">🔓</span><div class="num">3</div>
+  <h3>Getting SSH access</h3>
+  <p>Try the password trick first, if fails then the breeze.sh method.</p>
+</div>
+<div class="step">
+  <span class="ic">📶</span><div class="num">4</div>
+  <h3>Flashing OpenWrt</h3>
+  <p>Flash via SSH, or via UART where the process calls for it.</p>
+</div>
+</section>
+
+<h2><b>02</b>Supported stock firmware &amp; models</h2>
+<div class="wrap"><table>
+<tr><th class="r"></th><th class="fam c1">6101</th><th class="fam c2">6j01</th><th class="fam c3">6j11</th></tr>
+<tr><th class="r">Supported stock firmware</th>
+<td><span class="fw">ALL</span><small>R3.2.3 supported</small></td>
+<td><span class="fw">R3.2 or below</span><small>very few routers support R3.2.3 as of yet</small></td>
+<td><span class="fw">R3.2 or below</span><small>very few routers support R3.2.3 as of yet</small></td></tr>
+<tr><th class="r">Models included</th>
+<td><div class="chips"><span class="chip t1">6101</span></div></td>
+<td><div class="chips"><span class="chip t2">6201</span><span class="chip t2">6401</span><span class="chip t2">6601</span><span class="chip t2">6701</span></div></td>
+<td><div class="chips"><span class="chip t3">6111</span><span class="chip t3">6411</span><span class="chip t3">6611</span><span class="chip t3">6811</span><span class="chip t3">6911</span></div></td></tr>
+<tr><th class="r">Firmware Files</th>
+<td>
+  <small><a href="https://drive.google.com/drive/folders/1gpFZ-eFGfzEkPTUneGogFt7m4KQhDc-J" target="_blank">Download 6101 Firmware</a></small>
+</td>
+<td>
+  <small><a href="https://drive.google.com/drive/folders/1Prx2c3PCS-ds-0OpgL-tWOkrtK-E8RAY" target="_blank">Download 6j01 Firmware</a></small>
+</td>
+<td>
+  <small><a href="https://drive.google.com/drive/folders/1aQ1dSXbbUmh2F57AGMaHOLlTmLBcLIg4" target="_blank">Download 6j11 Firmware</a></small>
+</td>
+<tr><th class="r">Commands Link</th>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/6101_commands.md" target="_blank">6101 UART</a></small>
+</td>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/README.md" target="_blank">6101/6j01 SSH</a></small>
+</td>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/6j11_instructions.md" target="_blank">6j11 UART</a></small>
+</td>
+<tr><th class="r">UART Pinouts (not required for SSH method)</th>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/uart_pins/uart_read.md" target="_blank">6101</a></small>
+</td>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/uart_pins/uart_read.md" target="_blank">6j01</a></small>
+</td>
+<td>
+  <small><a href="https://github.com/the-diy-daddy/6j01_6j11/blob/main/uart_pins/uart_read.md" target="_blank">6j11</a></small>
+</td>
+</table></div>
+
+<h2><b>03</b>Process by router</h2>
+<section class="wf">
+<article class="card" style="--k:var(--a)">
+<h3><em>A</em> · 6101 process</h3>
+<div class="flow">
+  <div class="n">🔑 Attempt password trick<br><a href="https://youtu.be/xy8j6yw98fk?t=770" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If the password trick fails</span>
+  <div class="n warn">Attempt breeze.sh method<br><a href="https://youtu.be/S8LuuL7tme4?t=108" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If both fail</span>
+  <div class="n fin">Flash directly using UART method<br><a href="https://youtu.be/Vz5grwLGxug" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+</article>
+
+<article class="card" style="--k:var(--b)">
+<h3><em>B</em> · 6j01 process: 6201, 6401, 6601, 6701</h3>
+<div class="flow">
+  <div class="n">🔑 Attempt password trick<br><a href="https://youtu.be/xy8j6yw98fk?t=770" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If the password trick fails</span>
+  <div class="n warn">Attempt breeze.sh method<br><a href="https://youtu.be/S8LuuL7tme4?t=108" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If Backup Restore Option Available</span>
+  <div class="n warn">Attempt Downgrade Firmware<br><a href="https://youtu.be/ODFnTourHYk?t=48" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/S8LuuL7tme4?t=1080" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If by any chance SSH method fails</span>
+  <div class="n warn">Attempt UART method of 6101, works on every 6j01<br><a href="https://youtu.be/Vz5grwLGxug" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+</article>
+
+<article class="card" style="--k:var(--c)">
+<h3><em>C</em> · 6j11 process: 6111, 6411, 6611, 6811, 6911 (New Flash via SSH Method)</h3>
+<div class="flow">
+  <div class="n">🔑 Attempt password trick<br><a href="https://youtu.be/xy8j6yw98fk?t=770" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/7xkd3qDdVFA?list=PLKNeAbh7YAf0&t=180" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If the password trick fails</span>
+  <div class="n warn">Attempt breeze.sh method<br><a href="https://youtu.be/S8LuuL7tme4?t=108" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+  <span class="ar">Success (you got SSH Access)</span>
+  <div class="n fin">Flash using SSH<br><a href="https://youtu.be/7xkd3qDdVFA?list=PLKNeAbh7YAf0&t=180" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+<div class="flow fb">
+  <span class="lab">If by any chance SSH method fails</span>
+  <div class="n warn">Attempt UART method<br><a href="https://youtu.be/ODFnTourHYk?t=839" target="_blank" class="vid-link">▶ Watch Guide</a></div>
+</div>
+</article>
+</section>
+
+<!-- Embedded Video Section moved to the bottom -->
+<h2><b>04</b>Featured Video Guide</h2>
+<div class="video-wrapper">
+  <!-- Replaced standard watch URL with the proper /embed/ URL format -->
+  <iframe src="https://www.youtube.com/embed/xy8j6yw98fk" title="OpenWrt Flashing Guide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<!-- ========================================== -->
+<!-- NEW SECTIONS: 05, 06, 07 WITH IMAGES       -->
+<!-- ========================================== -->
+
+<h2><b>05</b>Setup OpenWrt (5 Modes)</h2>
+<section class="steps">
+<div class="step" style="grid-column: 1 / -1; display: block; padding-top: 22px;">
+  <h3 style="display: flex; align-items: center; gap: 8px; font-size: 20px; margin-bottom: 16px;">
+    <span style="font-size: 24px;">⚙️</span> OpenWrt Configuration Master Guide
+  </h3>
+  
+  <div style="background: rgba(0, 0, 0, 0.03); border-radius: 12px; border: 1px solid var(--line); margin-bottom: 18px; text-align: center; padding: 20px;">
+    <img src="setup_modes.png" alt="OpenWrt Setup Modes" style="max-width: 100%; max-height: 500px; height: auto; object-fit: contain; border-radius: 8px;">
+  </div>
+  
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+    <a href="https://youtu.be/eLMfTWDzTDk" target="_blank" class="vid-btn primary" style="margin: 0 4px 0 0;">▶ Watch Full Video Setup</a>
+    
+    <a href="https://youtu.be/eLMfTWDzTDk?t=272" target="_blank" class="vid-btn secondary" style="margin:0;">▶ 4:32 - Router Mode</a>
+    <a href="https://youtu.be/eLMfTWDzTDk?t=568" target="_blank" class="vid-btn secondary" style="margin:0;">▶ 9:28 - Access Point Mode</a>
+    <a href="https://youtu.be/eLMfTWDzTDk?t=934" target="_blank" class="vid-btn secondary" style="margin:0;">▶ 15:34 - Hotspot Router</a>
+    <a href="https://youtu.be/eLMfTWDzTDk?t=1224" target="_blank" class="vid-btn secondary" style="margin:0;">▶ 20:24 - Wireless Extender / Repeater</a>
+    <a href="https://youtu.be/eLMfTWDzTDk?t=1955" target="_blank" class="vid-btn secondary" style="margin:0;">▶ 32:35 - USB Tethering Mode</a>
+  </div>
+</div>
+</section>
+
+<!-- Updated grid container layout with bottom margin to fix overlapping legend text -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin-top: 36px; margin-bottom: 40px;">
+  
+  <div style="display: flex; flex-direction: column;">
+    <h2 style="margin-top: 0;"><b>06</b>Install AdGuardHome</h2>
+    <div class="step" style="flex-grow: 1; display: flex; flex-direction: row; gap: 16px; align-items: flex-start; padding: 20px;">
+      <img src="adguard_home.png" alt="AdGuard Home" style="width: 140px; height: 96px; object-fit: contain; border-radius: 8px; border: 1px solid var(--line); flex-shrink: 0; background: #e3f5e5; padding: 8px;">
+      <div style="display: flex; flex-direction: column; height: 100%; flex-grow: 1;">
+        <h3 style="margin: 0 0 6px 0; font-size: 16px;">Network-Wide Ad Blocking</h3>
+        <p style="margin: 0 0 12px 0; font-size: 13px; line-height: 1.4;">Learn how to install AdGuardHome to block ads at the network level for all your connected devices.</p>
+        <a href="https://youtu.be/6EPiimDlGwY" target="_blank" class="vid-btn primary" style="align-self: flex-start; margin-top: auto; padding: 6px 12px;">▶ Watch Video</a>
+      </div>
+    </div>
+  </div>
+  
+  <div style="display: flex; flex-direction: column;">
+    <h2 style="margin-top: 0;"><b>07</b>Create VPN-Wifi Network</h2>
+    <div class="step" style="flex-grow: 1; display: flex; flex-direction: row; gap: 16px; align-items: flex-start; padding: 20px;">
+      <img src="openwrt_wireguard.png" alt="WireGuard VPN" style="width: 140px; height: 96px; object-fit: contain; border-radius: 8px; border: 1px solid var(--line); flex-shrink: 0; background: #fff; padding: 8px;">
+      <div style="display: flex; flex-direction: column; height: 100%; flex-grow: 1;">
+        <h3 style="margin: 0 0 6px 0; font-size: 16px;">WireGuard VPN Setup</h3>
+        <p style="margin: 0 0 12px 0; font-size: 13px; line-height: 1.4;">Step-by-step guide on how to create a secure VPN-Wifi Network using WireGuard for completely free.</p>
+        <a href="https://youtu.be/xy8j6yw98fk" target="_blank" class="vid-btn primary" style="align-self: flex-start; margin-top: auto; padding: 6px 12px;">▶ Watch Video</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+<span><i class="dot"></i>Success path</span><span><i class="dot bad"></i>Failure path</span><span>→ Key step</span><span><i class="sq"></i>Final action</span>
+</div>
+</main>
+</body>
+</html>
